@@ -1,7 +1,9 @@
 import { Client } from "discord.js"
 import config from "./config"
-
+import * as commandModules from "./commands"
 export const client = new Client({intents: ["Guilds", "GuildMessages", "DirectMessages"]})
+
+const commands = Object(commandModules)
 
 client.once("ready", () => {
     console.log("Discord bot online.");
@@ -12,9 +14,7 @@ client.on("interactionCreate", async (interaction) => {
         return
     }
     const { commandName } = interaction;
-    if(commandName == 'ping'){
-        interaction.reply("pong")
-    }
+    commands[commandName].execute(interaction,client)
 })
 
 client.login(config.DISCORD_TOKEN)
